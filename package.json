@@ -1,0 +1,44 @@
+{
+  "name": "singularitynet-token-manager",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Includes token batch transfer contracts, migrations, tests",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "package-npm": "node scripts/package-npm.js",
+    "deploy": "scripts/truffle-migrate",
+    "compile": "node_modules/.bin/truffle compile",
+    "test": "rm -rf build && node_modules/.bin/truffle test",
+    "test-develop": "rm -rf build && node_modules/.bin/truffle test --network develop"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/singnet/converter-token-manager.git"
+  },
+  "author": "SingularityNET",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/singnet/converter-token-manager.git/issues"
+  },
+  "homepage": "https://github.com/singnet/converter-token-manager.git#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0",
+    "@truffle/contract": "^4.2.23",
+    "@truffle/hdwallet-provider": "^1.1.0",
+    "singularitynet-token-contracts": "2.0.1",
+    "truffle": "5.1.46"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "eth-gas-reporter": "^0.1.12",
+    "ethereumjs-abi": "^0.6.5",
+    "ethereumjs-util": "^5.2.0",
+    "fs-extra": "^5.0.0",
+    "moment": "^2.22.2",
+    "webpack-cli": "^3.1.2"
+  }
+}
