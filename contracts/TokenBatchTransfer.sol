@@ -1,4 +1,4 @@
-pragma solidity >=0.4.22 <0.8.0;
+pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -34,8 +34,8 @@ contract TokenBatchTransfer is Ownable {
     }
 
     // To transfer tokens from Contract to the provided list of token holders with respective amount
-    function batchTransfer(address[] memory tokenHolders, uint256[] memory amounts) 
-    public 
+    function batchTransfer(address[] calldata tokenHolders, uint256[] calldata amounts) 
+    external 
     onlyOwner
     {
         require(tokenHolders.length == amounts.length, "Invalid input parameters");
