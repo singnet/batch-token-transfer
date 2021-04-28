@@ -6,17 +6,17 @@ let TokenBytecode = require("singularitynet-token-contracts/bytecode/Singularity
 let Token = Contract({contractName: "SingularityNetToken", abi: TokenAbi, networks: TokenNetworks, bytecode: TokenBytecode});
 
 // Token Contract Constants
-const name = "SingularityNET Token"
-const symbol = "AGI"
+const name = "SAMI Token"
+const symbol = "SAMI"
 
 module.exports = function(deployer, network, accounts) {
     Token.setProvider(web3.currentProvider)
     Token.defaults({from: accounts[0], gas: 4000000});
 
     // AGI-I Contract deployment -- Will be deleted once AGI-2 is deployed - Kept it for compatibility only
-    deployer.deploy(Token, {overwrite: false, gas: 4000000}).then((TokenInstance) => deployer.deploy(TokenBatchTransfer, TokenInstance.address));
+    //deployer.deploy(Token, {overwrite: false, gas: 4000000}).then((TokenInstance) => deployer.deploy(TokenBatchTransfer, TokenInstance.address));
 
     // AGI-II Contract deployment 
-    //deployer.deploy(Token, name, symbol, {overwrite: false, gas: 4000000}).then((TokenInstance) => deployer.deploy(TokenBatchTransfer, TokenInstance.address));
+    deployer.deploy(Token, name, symbol, {overwrite: false, gas: 4000000}).then((TokenInstance) => deployer.deploy(TokenBatchTransfer, TokenInstance.address));
 
 };
