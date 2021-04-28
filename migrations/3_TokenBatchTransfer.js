@@ -6,8 +6,8 @@ let TokenBytecode = require("singularitynet-token-contracts/bytecode/Singularity
 let Token = Contract({contractName: "SingularityNetToken", abi: TokenAbi, networks: TokenNetworks, bytecode: TokenBytecode});
 
 // Token Contract Constants
-const name = "SAMI Token"
-const symbol = "SAMI"
+const name = "SingularityNET Token"
+const symbol = "AGIX"
 
 module.exports = function(deployer, network, accounts) {
     Token.setProvider(web3.currentProvider)
