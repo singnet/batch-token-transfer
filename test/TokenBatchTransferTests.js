@@ -54,6 +54,16 @@ console.log("Number of Accounts - ", accounts.length)
 
         };
 
+        const updateTransferOperatorAndVeryfy = async(_transferOperator, _account) => {
+
+            await tokenBatchTransfer.updateOperator(_transferOperator, {from:_account});
+
+            // Get the Updated Transfer Operator
+            const transferOperator = await tokenBatchTransfer.transferOperator.call();
+            assert.equal(transferOperator, _transferOperator);
+
+        }
+
         const updateOwnerAndVerify = async(_newOwner, _account) => {
 
             let newOwner = "0x0"
@@ -73,6 +83,27 @@ console.log("Number of Accounts - ", accounts.length)
             newOwner = await tokenBatchTransfer.owner.call();
 
             assert.equal(newOwner, _newOwner);
+
+        }
+
+        const withdrawTokenAndVerify = async(_amount, _account) => {
+
+            // Token Balance
+            const wallet_bal_b = (await token.balanceOf(_account)).toNumber();
+            const contract_bal_b = (await token.balanceOf(tokenBatchTransfer.address)).toNumber();
+
+            // Call Withdraw Stake
+            await tokenBatchTransfer.withdrawToken(_amount, {from:_account});
+
+            // Token Balance
+            const wallet_bal_a = (await token.balanceOf(_account)).toNumber();
+            const contract_bal_a = (await token.balanceOf(tokenBatchTransfer.address)).toNumber();
+
+            // Wallet Balance Should Increase
+            assert.equal(wallet_bal_b, wallet_bal_a - _amount);
+
+            // Contract Balance Should Reduce
+            assert.equal(contract_bal_b, contract_bal_a + _amount);
 
         }
 
@@ -101,7 +132,7 @@ console.log("Number of Accounts - ", accounts.length)
         // accounts[0] -> Contract Owner
 
         // An explicit call is required to mint the tokens for AGI-II
-        //await token.mint(accounts[0], GAmt, {from:accounts[0]});
+        await token.mint(accounts[0], 2*GAmt, {from:accounts[0]});
 
         //await approveTokensToContract(1, 9, GAmt);
 
@@ -124,6 +155,20 @@ console.log("Number of Accounts - ", accounts.length)
 
     });
 
+    it("2. Administrative Operations - Update Transfer Operator", async function() 
+    {
+
+        // Update the Transfer Operator to accounts[9]
+        await updateTransferOperatorAndVeryfy(accounts[9], accounts[0]);
+
+        // Transfer Operator should be uodated only by Owner
+        await testErrorRevert(tokenBatchTransfer.updateOperator(accounts[8], {from:accounts[1]}));
+
+        // Even the Oprator cannot update to another operator
+        await testErrorRevert(tokenBatchTransfer.updateOperator(accounts[8], {from:accounts[9]}));
+
+    });
+
     it("3. Batch Transfers - 1", async function() 
     {
 
@@ -138,11 +183,17 @@ console.log("Number of Accounts - ", accounts.length)
 
         }
 
+        // Even the Owner cannot initiate the batch transfer
+        await testErrorRevert(tokenBatchTransfer.batchTransfer(tokenHolders, amounts, {from:accounts[0]}));
+
+        // Even non Operator cannot initiate the batch transfer
+        await testErrorRevert(tokenBatchTransfer.batchTransfer(tokenHolders, amounts, {from:accounts[5]}));
+
         //let contractTokenBalance = (await token.balanceOf(tokenBatchTransfer.address)).toNumber();
         // console.log("Contract Before Balance - ", contractTokenBalance);
         // console.log("Account-1 Before Balance - ", (await token.balanceOf(accounts[1])).toNumber());
 
-        await tokenBatchTransfer.batchTransfer(tokenHolders, amounts);
+        await tokenBatchTransfer.batchTransfer(tokenHolders, amounts, {from:accounts[9]});
 
         //contractTokenBalance = (await token.balanceOf(tokenBatchTransfer.address)).toNumber();
 
@@ -172,7 +223,7 @@ console.log("Number of Accounts - ", accounts.length)
         //console.log("Contract Before Balance - ", contractTokenBalance);
         //console.log("Account-1 Before Balance - ", (await token.balanceOf(accounts[1])).toNumber());
 
-        await tokenBatchTransfer.batchTransfer(tokenHolders, amounts);
+        await tokenBatchTransfer.batchTransfer(tokenHolders, amounts, {from:accounts[9]});
 
         //contractTokenBalance = (await token.balanceOf(tokenBatchTransfer.address)).toNumber();
 
@@ -180,6 +231,25 @@ console.log("Number of Accounts - ", accounts.length)
         //console.log("Account-1 After Balance - ", (await token.balanceOf(accounts[1])).toNumber());
 
     });
+
+    it("5. Administrative Operations - Withdraw Pending Tokens to Wallet", async function() 
+    {
+
+        // Get the Final Balance from the Contract
+        const balanceInContract = await token.balanceOf(tokenBatchTransfer.address);
+
+        // Withdraw the Balance and Verify should be done only operator not even owner
+        await testErrorRevert(tokenBatchTransfer.withdrawToken(balanceInContract, {from:accounts[0]}));
+
+        // Withdraw the Balance and Verify should be done only operator not even other users
+        await testErrorRevert(tokenBatchTransfer.withdrawToken(balanceInContract, {from:accounts[5]}));
+
+        // Withdraw the Balance and Verify
+        await withdrawTokenAndVerify(balanceInContract, accounts[9])
+
+    });
+
+    
 
 
 });

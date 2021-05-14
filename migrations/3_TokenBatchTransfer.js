@@ -6,7 +6,7 @@ let TokenBytecode = require("singularitynet-token-contracts/bytecode/Singularity
 let Token = Contract({contractName: "SingularityNetToken", abi: TokenAbi, networks: TokenNetworks, bytecode: TokenBytecode});
 
 // Token Contract Constants
-const name = "SingularityNET Token"
+const name = "SingularityNet Token"
 const symbol = "AGIX"
 
 module.exports = function(deployer, network, accounts) {

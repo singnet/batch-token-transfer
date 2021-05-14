@@ -9,20 +9,40 @@ contract TokenBatchTransfer is Ownable {
     using SafeMath for uint256;
 
     ERC20 public token; // Address of token contract
+    address public transferOperator; // Address to manage the Transfers
+
+    // Modifiers
+    modifier onlyOperator() {
+        require(
+            msg.sender == transferOperator,
+            "Only operator can call this function."
+        );
+        _;
+    }
 
     constructor(address _token)
     public
     {
         token = ERC20(_token);
+        transferOperator = msg.sender;
     }
 
 
     // Events
+    event NewOperator(address transferOperator);
     event WithdrawToken(address indexed owner, uint256 stakeAmount);
 
+    function updateOperator(address newOperator) public onlyOwner {
+
+        require(newOperator != address(0), "Invalid operator address");
+        
+        transferOperator = newOperator;
+
+        emit NewOperator(newOperator);
+    }
 
     // To withdraw tokens from contract, to deposit directly transfer to the contract
-    function withdrawToken(uint256 value) public onlyOwner
+    function withdrawToken(uint256 value) public onlyOperator
     {
 
         // Check if contract is having required balance 
@@ -36,7 +56,7 @@ contract TokenBatchTransfer is Ownable {
     // To transfer tokens from Contract to the provided list of token holders with respective amount
     function batchTransfer(address[] calldata tokenHolders, uint256[] calldata amounts) 
     external 
-    onlyOwner
+    onlyOperator
     {
         require(tokenHolders.length == amounts.length, "Invalid input parameters");
 
