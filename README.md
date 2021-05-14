@@ -43,4 +43,4 @@ npm run package-npm
 ```
 
 ## Release
-Contract build artifacts are published to NPM: https://www.npmjs.com/package/singularitynet-token-manager
+Contract build artifacts are published to NPM: https://www.npmjs.com/package/batch-token-transfer
