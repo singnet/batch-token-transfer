@@ -1,7 +1,17 @@
-build/npm-module
-build
 node_modules
-yarn-error.log
-npm-debug.log
-addresses.json
-/.vscode
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
