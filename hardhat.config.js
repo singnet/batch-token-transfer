@@ -1,5 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("hardhat-contract-sizer");
+
 require("@nomicfoundation/hardhat-verify");
 require("@nomiclabs/hardhat-solhint");
 

@@ -2,10 +2,14 @@
   "name": "singularitynet-batch-transfer",
   "version": "0.1.1",
   "dependencies": {
-    "@openzeppelin/contracts": "^3.2.0"
+    "@openzeppelin/contracts": "^3.2.0",
+    "dotenv": "16.4.7"  
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-verify": "2.1.1",
+    "hardhat-contract-sizer": "2.10.1",
+    "@nomiclabs/hardhat-solhint": "4.1.0",
     "hardhat": "^2.27.0"
   }
 }
